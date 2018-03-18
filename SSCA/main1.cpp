@@ -21,30 +21,16 @@
 int main( int argc, char** argv )
 {
 	printf( "Scale Space Cost Aggregation\n" );
-	/*if( argc != 10 ) {
-		printf( "Usage: [CC_METHOD] [CA_METHOD] [PP_METHOD] [C_ALPHA] [lImg] [rImg] [lDis] [maxDis] [disSc]\n" );
-		printf( "\nPress any key to continue...\n" );
-		getchar();
-		//return -1;
-	}*/
 	// ccName GRD CEN CG 
 	// GRD--intensity+gradient; CEN--Census Transform; CG--Census+gradient;
 	string ccName = "GRD";
 	// caName GF BF BOX NL 
-	// GF--guided image filter; BF--bilateral filter; BOX--box filter; NL--non-local cost aggregation;  
+	// GF--guided image filter; BF--bilateral filter; BOX--box filter
 	string caName = "GF";
 	// ppName WN--weighted median filtering
 	string ppName = "WM";
 	double costAlpha = atof( "0.3" );
-	//string lFn = "G:/StereoMatching/Rectified/left_38.bmp";
 	
-	
-	//for (int s = 56; s < 77; s++) {
-		//ostringstream sStr;
-		//sStr << s;
-		//string lFn = "G:/StereoMatching/kitti2/L/00000000" + sStr.str() + ".png";
-		//string rFn = "G:/StereoMatching/kitti2/R/00000000" + sStr.str() + ".png";
-		//string lDisFn = "G:/StereoMatching/kitti2/dis/00000000" + sStr.str() + ".png";
 	string lFn = "/home/nvidia/project/2/SSCA/data/L.png";
 	string rFn = "/home/nvidia/project/2/SSCA/data/R.png";
 	string lDisFn = "/home/nvidia/project/2/SSCA/data/dis0001.jpg";
@@ -114,12 +100,6 @@ int main( int argc, char** argv )
 		// new method
 		SolveAll(smPyr, PY_LVL, costAlpha);
 
-		// old method
-		//for( int p = PY_LVL - 2 ; p >= 0; p -- ) {
-		//	smPyr[ p ]->AddPyrCostVol( smPyr[ p + 1 ], costAlpha );
-		//}
-
-		//
 		// Match + Postprocess
 		//
 		smPyr[0]->Match();
@@ -141,13 +121,9 @@ int main( int argc, char** argv )
 
 		//
 		// Save Output
-		//
-		//cvtools::writeMat(lDis, "lDis.mat", "lDis");
 
 		imwrite(lDisFn, lDis);
-		//imwrite( lDisFn1, lDis);
-
-		//
+		
 		// For drawing - save cost volume
 		//
 		string costFn = "";
