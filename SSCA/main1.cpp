@@ -5,6 +5,7 @@
 // Author: Zhang Kang
 // Date: 2013/09/06
 ///////////////////////////////////////////////////////
+
 #include "CommFunc.h"
 #include "SSCA.h"
 #include "CC/GrdCC.h"
@@ -87,6 +88,7 @@ int main( int argc, char** argv )
 			//if( p== 0 ) {
 			//		smPyr[ 0 ]->saveCostVol( "CCGRD.txt" );
 			//}
+			
 			smPyr[p]->CostAggre(caMtd);
 			// pyramid downsample
 			maxDis = maxDis / 2 + 1;
