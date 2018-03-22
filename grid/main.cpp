@@ -1,11 +1,11 @@
 #include "situation.h"
 
-#include <windows.h>
+//#include <windows.h>
 #include <vector> 
 #include <fstream> 
 
 
-void main()   
+int main()   
 {   
 	int nImageHeightl=2000;
 	int nImageWidthl= 77 ;
@@ -14,7 +14,7 @@ void main()
 
 	{
 		ifstream gt;
-		gt.open("E:\\WORKING\\dad\\ranges.txt");
+		gt.open("/home/nvidia/SuperVehicle/grid/dad/ranges.txt");
 
 		for (int i = 0;i<ranges->height;i++)
 		{
@@ -29,7 +29,7 @@ void main()
 
 	{
 		ifstream gt;
-		gt.open("E:\\WORKING\\dad\\scanAngles.txt");
+		gt.open("/home/nvidia/SuperVehicle/grid/dad/scanAngles.txt");
 
 		for (int i = 0;i<scanAngles->height;i++)
 		{
@@ -44,7 +44,7 @@ void main()
 
 	{
 		ifstream gt;
-		gt.open("E:\\WORKING\\dad\\pose.txt");
+		gt.open("/home/nvidia/SuperVehicle/grid/dad/pose.txt");
 
 		for (int i = 0;i<pose->height;i++)
 		{
@@ -59,7 +59,7 @@ void main()
 
 	{
 		ifstream gt;
-		gt.open("E:\\WORKING\\dad\\height.txt");
+		gt.open("/home/nvidia/SuperVehicle/grid/dad/height.txt");
 
 		for (int i = 0;i<height->height;i++)
 		{
@@ -87,4 +87,6 @@ void main()
 	cvReleaseImage(&scanAngles);
 	cvReleaseImage(&pose);
 	cvReleaseImage(&height);
+
+        return 0;
 }

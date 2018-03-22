@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/nvidia/SuperVehicle/grid/situation.cpp
+situation.h
+/home/nvidia/SuperVehicle/grid/situation.h
+
+/home/nvidia/SuperVehicle/grid/situation.h
+vector
+-
+fstream
+-
+opencv/cv.h
+-
+opencv/cvaux.h
+-
+opencv/highgui.h
+-
+opencv/cxcore.h
+-
+

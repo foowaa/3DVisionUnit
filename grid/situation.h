@@ -1,4 +1,4 @@
-#include <windows.h>
+//#include <windows.h>
 #include <vector> 
 #include <fstream>
 #include<opencv/cv.h>               
@@ -9,7 +9,7 @@
 
 using namespace std;
 
-
+typedef unsigned char byte;
 typedef vector<int> my_int;
 
 struct Param

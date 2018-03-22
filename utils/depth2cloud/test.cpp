@@ -9,7 +9,7 @@ int main()
 	// rgb 图像是8UC3的彩色图像
 	//rgb = cv::imread("rgb.png");
 	// depth 是16UC1的单通道图像，注意flags设置-1,表示读取原始数据不做任何修改
-	depth = cv::imread("depth.png", -1);
+	depth = cv::imread("/home/nvidia/SuperVehicle/utils/depth2cloud/data/depth.png", -1);
 	int rows = depth.rows;//获取深度图的行数
 	int cols = depth.cols;//获取深度图的列数
 	PointC * p = new PointC[rows * cols];
