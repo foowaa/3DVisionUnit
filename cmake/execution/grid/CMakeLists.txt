@@ -7,7 +7,7 @@ project(grid_map C CXX)
 
 #message(STATUS "sources: ${SRC_FILES}")
 #include_directories(CAFilter CANLC CAST CC PPSG PPWM)
-set(EXECUTABLE_OUTPUT_PATH /home/nvidia/SuperVehicle/grid/build/bin)
+set(EXECUTABLE_OUTPUT_PATH ./bin)
 # Find OpenCV, you may need to set variable
 # to the absolute path to the directory containing OpenCVConfig.cmake file
 # via the command line or GUI
@@ -27,8 +27,8 @@ message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 # Add OpenCV headers location to your include paths
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-#add_executable(grid_map main.cpp)
-add_library(grid_map situation.cpp)
+add_executable(grid_map ../main.cpp ../situation.cpp)
+#add_library(grid_map situation.cpp)
 
 #target_link_libraries(grid_map ${OpenCV_LIBS} /home/nvidia/SuperVehicle/grid/lib/libgrid_map.so)
 target_link_libraries(grid_map ${OpenCV_LIBS})

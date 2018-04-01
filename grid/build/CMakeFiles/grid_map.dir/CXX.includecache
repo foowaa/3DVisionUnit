@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/nvidia/SuperVehicle/grid/situation.cpp
+/home/nvidia/SuperVehicle-dev1/grid/situation.cpp
 situation.h
-/home/nvidia/SuperVehicle/grid/situation.h
+/home/nvidia/SuperVehicle-dev1/grid/situation.h
 
-/home/nvidia/SuperVehicle/grid/situation.h
+/home/nvidia/SuperVehicle-dev1/grid/situation.h
 vector
 -
 fstream

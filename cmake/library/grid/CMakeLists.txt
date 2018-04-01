@@ -7,7 +7,7 @@ project(grid_map C CXX)
 
 #message(STATUS "sources: ${SRC_FILES}")
 #include_directories(CAFilter CANLC CAST CC PPSG PPWM)
-set(EXECUTABLE_OUTPUT_PATH /home/nvidia/SuperVehicle/grid/build/bin)
+set(EXECUTABLE_OUTPUT_PATH PROJECT_SOURCE_DIR/bin)
 # Find OpenCV, you may need to set variable
 # to the absolute path to the directory containing OpenCVConfig.cmake file
 # via the command line or GUI

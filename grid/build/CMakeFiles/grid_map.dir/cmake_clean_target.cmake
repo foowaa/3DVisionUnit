@@ -1,3 +1,3 @@
-FILE(REMOVE_RECURSE
+file(REMOVE_RECURSE
   "libgrid_map.a"
 )
