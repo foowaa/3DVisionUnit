@@ -12,13 +12,11 @@ refs:
 #include "test.h"
 #include "helper_math.h"
 
-
-
 using namespace cv;
 using namespace cv::gpu;
 
 __global__ void solveAllKernel(PtrStepSz<double>* pdSrc, PtrStepSz<double>* pdDst, double* invWgt, 
-                               int imgW, int imgH, int cA1, int cA2, int cA3, int lvl) {
+                              int cA1, int cA2, int cA3, int lvl) {
                 
   int d = threadIdx.x + blockDim.x * blockIdx.x;
   int y = threadIdx.y + blockDim.y * blockIdx.y;

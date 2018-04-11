@@ -384,7 +384,7 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
     dim3 block(8, 8, 8);
     dim3 grid( (constVar2+block.x-1)/block.x, (hei+block.y-1)/block.y, (wid+block.z-1)/block.z);
 
-	solveAllKernel<<<grid, block>>>(pdSrc, pdDst, dinvWgt, wid, hei, constVar2, hei, wid, PY_LVL);
+	solveAllKernel<<<grid, block>>>(pdSrc, pdDst, dinvWgt, constVar2, hei, wid, PY_LVL);
 
 	cudaCheckError(cudaMemcpy(phDst, pdDst, constVar1*sizeof(PtrStepSz<double>)
 		                      cudaMemcpyDeviceToHost));
