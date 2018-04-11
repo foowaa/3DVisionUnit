@@ -398,6 +398,7 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 
 	cudaCheckError(cudaFree(pdSrc));
 	cudaCheckError(cudaFree(pdDst));
+	cudaCheckError(cudaFree(dinvWgt));
 /*
 end
  */
