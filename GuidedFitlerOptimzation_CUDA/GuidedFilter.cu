@@ -10,6 +10,7 @@ texture<float4, cudaTextureType2D> rgbaTex;
 texture<float4, cudaTextureType2D> rgbaTexI, rgbaTexP;
 cudaArray *rgbaIn_d, *rgbaOut_d;
 
+
 int iDiv(int a, int b)
 {
     if (a % b == 0)
@@ -18,11 +19,13 @@ int iDiv(int a, int b)
         return a / b + 1;
 }
 
+
 void imgShow(Mat img)
 {
     imshow("Temp", img);
     waitKey(0);
 }
+
 
 GFilter::GFilter(int r, int c) : row_(r), col_(c), rad_(45), eps_(0.000001)
 {

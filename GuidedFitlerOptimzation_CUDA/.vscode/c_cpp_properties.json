@@ -48,7 +48,11 @@
                 "${workspaceFolder}",
                 "C:/Program Files (x86)/Windows Kits/8.1/Include/um",
                 "C:/Program Files (x86)/Windows Kits/8.1/Include/shared",
-                "C:/Program Files (x86)/Windows Kits/8.1/Include/winrt"
+                "C:/Program Files (x86)/Windows Kits/8.1/Include/winrt",
+                "E:/SuperVehicle/GuidedFitlerOptimzation_CUDA/inc",
+                "E:/SuperVehicle/GuidedFitlerOptimzation_CUDA",
+                "E:/program files/opencv2.4.13/opencv/build/include/opencv",
+                "E:/program files/opencv2.4.13/opencv/build/include/opencv2"
             ],
             "defines": [
                 "_DEBUG",
