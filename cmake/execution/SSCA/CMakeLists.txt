@@ -1,9 +1,13 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.2)
 
-project(SSCA C CXX)
+project(SSCA)
 
 #file(GLOB_RECURSE SRC_FILES "../*.cpp")
 list(APPEND SRC_FILES ../SSCA.cpp;../cvtools.cpp;../CC/CGCC.cpp;../CC/CenCC.cpp;../CC/GrdCC.cpp;../PPSG/SGPP.cpp;../PPWM/WMPP.cpp;../CAFilter/GuidedFilter.cpp;../CAFilter/GFCA.cpp;../CAFilter/BilateralFilter.cpp;../CAFilter/BFCA.cpp;../CAFilter/BoxCA.cpp;../CAST/ctmf1.c;../CAST/SegmentTree.cpp;../CAST/StereoDisparity.cpp;../CAST/STCA.cpp;../CAST/Toolkit.cpp;../CAST/StereoHelper.cpp;../main1.cpp)
+
+include(/usr/bin/cmake-3.10.3/Modules/FindCUDA.cmake)
+find_package(CUDA REQUIRED)
+include_directories(./inc)  
 
 message(STATUS "sources: ${SRC_FILES}")
 include_directories(CAFilter CANLC CAST CC PPSG PPWM)
@@ -27,7 +31,14 @@ message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 # Add OpenCV headers location to your include paths
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(SSCA ${SRC_FILES})
+cuda_add_executable(SSCA ${SRC_FILES})
+
+#add_executable(SSCA ${SRC_FILES})
+
+link_directories(/usr/local/cuda/lib64/)
+message(${CUDA_LIBRARIES})
+
 #add_library(SSCA ${SRC_FILES})
 #target_link_libraries(SSCA ${OpenCV_LIBS} ../lib/libSSCA.so )
-target_link_libraries(SSCA ${OpenCV_LIBS})
+target_link_libraries(SSCA ${OpenCV_LIBS} )
+target_link_libraries(SSCA ${CUDA_LIBRARIES})
