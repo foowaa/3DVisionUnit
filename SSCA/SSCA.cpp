@@ -367,10 +367,10 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 	PtrStepSz<double>* phDst = new PtrStepSz<double>[constVar1];
 	PtrStepSz<double>* pdSrc;
 	PtrStepSz<double>* pdDst;
-	double *dinvWgt  = new double[ PY_LVL * PY_LVL 
+	double *dinvWgt  = new double[ PY_LVL * PY_LVL];
 	int i = 0;
 	for(int s=0; s<PY_LVL; s++)
-		for(int d=0; constVar2; d++)
+		for(int d=0; d<constVar2; d++)
 			mats[i++].upload(smPyr[s]->constVol[d]);
 	for (int i=0; i<constVar1; i++)
 		phSrc[i] = mats[i];
