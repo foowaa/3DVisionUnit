@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/nvidia/SuperVehicle1/SSCA/CAST/ctmf1.c
+assert.h
+-
+math.h
+-
+stdlib.h
+-
+string.h
+-
+basetsd.h
+-
+stdint.h
+-
+emmintrin.h
+-
+mmintrin.h
+-
+mm_malloc.h
+-
+malloc.h
+-
+altivec.h
+-
+stdint.h
+-
+

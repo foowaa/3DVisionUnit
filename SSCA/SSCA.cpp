@@ -2,7 +2,7 @@
 #include "SSCA.h"
 using namespace cv;
 using namespace cv::gpu;
-//#include "test.h"
+#include "test.h"
 #include<stdio.h>
 SSCA::SSCA(const Mat l, const Mat r, const int m, const int d)
 	: lImg( l ), rImg( r ), maxDis( m ), disSc( d )
@@ -131,7 +131,7 @@ void SSCA::AddPyrCostVol(SSCA *pre, const double COST_ALPHA )
 //
 void SSCA::CostCompute( CCMethod* ccMtd )
 {
-	printf( "\n\tCost Computation:" );
+	//printf( "\n\tCost Computation:" );
 	if( ccMtd ) {
 		ccMtd->buildCV( lImg, rImg, maxDis, costVol );
 #ifdef COMPUTE_RIGHT
@@ -147,7 +147,7 @@ void SSCA::CostCompute( CCMethod* ccMtd )
 //
 void SSCA::CostAggre( CAMethod* caMtd )
 {
-	printf( "\n\tCost Aggregation:" );
+	//printf( "\n\tCost Aggregation:" );
 	if( caMtd ) {
 		caMtd->aggreCV( lImg, rImg, maxDis, costVol );
 #ifdef COMPUTE_RIGHT
@@ -164,6 +164,7 @@ void SSCA::CostAggre( CAMethod* caMtd )
 void SSCA::Match( void )
 {
 	printf( "\n\tMatch" );
+        #pragma omp parallel for
 	for( int y = 0; y < hei; y ++ ) {
 		uchar* lDisData = ( uchar* ) lDis.ptr<uchar>( y );
 		for( int x = 0; x < wid; x ++ ) {
@@ -180,6 +181,7 @@ void SSCA::Match( void )
 		}
 	}
 #ifdef COMPUTE_RIGHT
+        #pragma omp parallel for
 	for( int y = 0; y < hei; y ++ ) {
 		uchar* rDisData = ( uchar* ) rDis.ptr<uchar>( y );
 		for( int x = 0; x < wid; x ++ ) {
@@ -256,8 +258,9 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 	}*/
 
 	//CPU version
+        
 /*	for( int d = 1; d < smPyr[ 0 ]->maxDis; d ++ ) {
-		printf( ".s.v." );
+		//printf( ".s.v." );
 		for( int y = 0; y < hei; y ++ ) {
 			for( int x = 0; x < wid; x ++ ) {
 				for( int m = 0; m < PY_LVL; m ++ ) {
@@ -285,81 +288,14 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 				}
 			}
 		}
-	}
-*/
+	}*/
+
 
 	/*
 	CUDA实现
 	author: cltian
 	date: 2018/4/10
-	ref: https://hk.saowen.com/a/43287d4469fb06d8e398c2b78572e8165133d687cac9082916ee12c69b44131d
-	 */
-	//加入新的头文件
-	
-/*	int imgH = hei;
-	int imgW = wid;
-	double **pImg = (double**)malloc(sizeof(double*)*PY_LVL*smPyr[ 0 ]->maxDis); //输入 二级指针
-	double *pDistData = (double*)malloc(sizeof(double)*PY_LVL*smPyr[ 0 ]->maxDis*imgH*imgW);
-	//device 指针
-    double **pDevice;//输入 二级指针
-    double *pDeviceData;//输入 二级指针
-    double **pDstImg;
-    double *pDstImgData;//输出图像对应的设备指针
-	double *dinvWgt  = new double[ PY_LVL * PY_LVL ];
-
-    cudaCheckError(cudaMalloc(&pDstImgData, sizeof(double)*imgH*imgW*PY_LVL*smPyr[ 0 ]->maxDis));
-    cudaCheckError(cudaMalloc(&pDstImg, sizeof(double*)*PY_LVL*smPyr[ 0 ]->maxDis));
-    cudaCheckError(cudaMalloc(&pDevice, sizeof(double*)*PY_LVL*smPyr[ 0 ]->maxDis));
-    cudaCheckError(cudaMalloc(&pDeviceData, sizeof(double)*imgH*imgW*PY_LVL*smPyr[ 0 ]->maxDis));
-	cudaCheckError(cudaMalloc(&dinvWgt, sizeof(double)*PY_LVL*PY_LVL));
-
-
-    for (int i=0; i<PY_LVL; i++){
-    	for (int j=0; j<smPyr[ 0 ]->maxDis; j++){
-    		pImg[i] = pDeviceData+imgH*imgW*(i+1)*(j+1);
-    	}
-    }
-
-    //拷贝到GPU
-    cudaCheckError(cudaMemcpy(pDevice, pImg, sizeof(double*)*PY_LVL*smPyr[ 0 ]->maxDis, cudaMemcpyHostToDevice));
-
-    cudaCheckError(cudaMemcpy(dinvWgt, invWgt, sizeof(double)*PY_LVL*PY_LVL, cudaMemcpyHostToDevice));
-
-    for (int i=0; i<PY_LVL; i++){
-    	for (int j=0; j<smPyr[ 0 ]->maxDis; j++){
-    		cudaCheckError(cudaMemcpy(pDeviceData+imgH*imgW*(i+1)*(j+1), smPyr[i]->costVol[j].data,
-    			                      sizeof(double)*imgH*imgW, cudaMemcpyHostToDevice));
-    	}
-    }
-       
-    dim3 block(8, 8, 8);
-    dim3 grid( (smPyr[ 0 ]->maxDis+block.x-1)/block.x, (imgH+block.y-1)/block.y, (imgW+block.z-1)/block.z);
-
-	solveAllKernel<<<grid, block>>>(pDevice, pDstImg, dinvWgt, imgW, imgH, smPyr[ 0 ]->maxDis, imgH, imgW);
-
-	cudaCheckError(cudaMemcpy(pDistData, pDstImgData, imgW*imgH*PY_LVL*smPyr[ 0 ]->maxDis*sizeof(double), cudaMemcpyDeviceToHost));
-
-	for (int i=0; i<PY_LVL*smPyr[ 0 ]->maxDis; i++)
-		cudaCheckError(cudaFree(pDevice[i]));
-	cudaCheckError(cudaFree(pDevice));
-	cudaCheckError(cudaFree(pDeviceData));
-	for (int i=0; i<PY_LVL*smPyr[ 0 ]->maxDis; i++)
-		cudaCheckError(cudaFree(pDstImg[i]));
-	cudaCheckError(cudaFree(pDstImg));
-	cudaCheckError(cudaFree(pDstImgData));
-	cudaCheckError(cudaFree(dinvWgt));
-
-	for( int s = 0; s < PY_LVL; s ++ ) {
-		for( int d = 0; d < smPyr[ s ]->maxDis; d ++ ) {
-			smPyr[ s ]->costVol[ d ] = pDistData[ s*PY_LVL+d ]
-			//smPyr[ s ]->costVol[ d ] = newCosts[ s ][ d ].clone();
-		}
-	}
-	free(pDistData);
-	for (int i=0; i<PY_LVL*smPyr[ 0 ]->maxDis; i++)
-		free(pImg[i]);
-	free(pImg);*/
-
+        */
 	GpuMat* mats;
 	const int constVar1 = PY_LVL*smPyr[ 0 ]->maxDis;
 	const int constVar2 = smPyr[ 0 ]->maxDis;
@@ -443,8 +379,8 @@ void saveOnePixCost( SSCA**& smPyr, const int PY_LVL )
 // global function to solve all cost volume
 void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 {
-	printf( "\n\t\tSolve All" );
-	printf( "\n\t\tReg param: %.4lf\n", REG_LAMBDA );
+	printf( "\n\t\tSolve All " );
+	//printf( "\n\t\tReg param: %.4lf\n", REG_LAMBDA );
 	// construct regularization matrix
 	Mat regMat = Mat::zeros( PY_LVL, PY_LVL, CV_64FC1 );
 	for( int s = 0; s < PY_LVL; s ++ ) {
@@ -465,7 +401,7 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 	for( int s = 0; s < PY_LVL; s ++ ) {
 		invWgt[ s ] = regInv.at<double>( 0, s );
 	}
-	PrintMat<double>( regInv );
+	//PrintMat<double>( regInv );
 	int hei = smPyr[ 0 ]->hei;
 	int wid = smPyr[ 0 ]->wid;
 	// PrintMat<double>( smPyr[ 0 ]->costVol[ 1 ] );
@@ -492,6 +428,7 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 	//
 	// Left Cost Volume
 	//
+/*        #pragma omp parallel for 
 	for( int d = 1; d < smPyr[ 0 ]->maxDis; d ++ ) {
 		// printf( ".s.v." );
 		for( int y = 0; y < hei; y ++ ) {
@@ -516,12 +453,61 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 
 			}
 		}
+	}*/
+
+
+	/*
+	CUDA实现
+	author: cltian
+	date: 2018/4/10
+        */
+	GpuMat* mats;
+	const int constVar1 = PY_LVL*smPyr[ 0 ]->maxDis;
+	const int constVar2 = smPyr[ 0 ]->maxDis;
+	PtrStepSz<double>* phSrc = new PtrStepSz<double>[constVar1];
+	PtrStepSz<double>* phDst = new PtrStepSz<double>[constVar1];
+	PtrStepSz<double>* pdSrc;
+	//PtrStepSz<double>* pdDst;
+	double *dinvWgt  = new double[ PY_LVL * PY_LVL];
+	int i = 0;
+	for(int s=0; s<PY_LVL; s++)
+		for(int d=0; d<constVar2; d++)
+			mats[i++].upload(smPyr[s]->costVol[d]);
+	for (int i=0; i<constVar1; i++)
+		phSrc[i] = mats[i];
+    cudaCheckError(cudaMalloc(&dinvWgt, sizeof(double)*PY_LVL*PY_LVL));
+	cudaCheckError(cudaMalloc(&pdSrc, constVar1*sizeof(PtrStepSz<double>)));
+	//cudaCheckError(cudaMalloc(&pdDst, constVar1*sizeof(PtrStepSz<double>)));
+    cudaCheckError(cudaMemcpy(dinvWgt, invWgt, sizeof(double)*PY_LVL*PY_LVL, cudaMemcpyHostToDevice));
+	cudaCheckError(cudaMemcpy(pdSrc, phSrc, constVar1*sizeof(PtrStepSz<double>), 
+		                      cudaMemcpyHostToDevice));
+
+    dim3 block(8, 8, 8);
+    dim3 grid( (constVar2+block.x-1)/block.x, (hei+block.y-1)/block.y, (wid+block.z-1)/block.z);
+
+	solveAllKernel<<<grid, block>>>(pdSrc, dinvWgt, constVar2, hei, wid, PY_LVL);
+
+	cudaCheckError(cudaMemcpy(phDst, pdSrc, constVar1*sizeof(PtrStepSz<double>)
+		                      cudaMemcpyDeviceToHost));
+
+	for( int s = 0; s < PY_LVL; s ++ ) {
+		for( int d = 0; d < smPyr[ s ]->maxDis; d ++ ) {
+			//smPyr[ s ]->costVol[ d ] = pDistData[ s*PY_LVL+d ]
+			Mat tempMatrix;
+			phSrc[s*PY_LVL+d].download(tempMatrix);
+		    smPyr[ s ]->costVol[ d ] = tempMatrix.clone();
+		}
 	}
 
+
+/*
+end
+ */
 #ifdef COMPUTE_RIGHT
 	//
 	// Right Cost Volume
 	//
+ /*       #pragma omp parallel for 
 	for( int d = 1; d < smPyr[ 0 ]->maxDis; d ++ ) {
 		// printf( ".s.v." );
 		for( int y = 0; y < hei; y ++ ) {
@@ -546,7 +532,37 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 
 			}
 		}
+	}*/
+	int i = 0;
+	for(int s=0; s<PY_LVL; s++)
+		for(int d=0; d<constVar2; d++)
+			mats[i++].upload(smPyr[s]->rcostVol[d]);
+	for (int i=0; i<constVar1; i++)
+		phSrc[i] = mats[i];
+	cudaCheckError(cudaMemcpy(pdSrc, phSrc, constVar1*sizeof(PtrStepSz<double>), 
+		                      cudaMemcpyHostToDevice));
+
+    dim3 block(8, 8, 8);
+    dim3 grid( (constVar2+block.x-1)/block.x, (hei+block.y-1)/block.y, (wid+block.z-1)/block.z);
+    
+	solveAllKernel<<<grid, block>>>(pdSrc, dinvWgt, constVar2, hei, wid, PY_LVL);
+
+	cudaCheckError(cudaMemcpy(phDst, pdSrc, constVar1*sizeof(PtrStepSz<double>)
+		                      cudaMemcpyDeviceToHost));
+
+	for( int s = 0; s < PY_LVL; s ++ ) {
+		for( int d = 0; d < smPyr[ s ]->maxDis; d ++ ) {
+			//smPyr[ s ]->costVol[ d ] = pDistData[ s*PY_LVL+d ]
+			Mat tempMatrix;
+			phSrc[s*PY_LVL+d].download(tempMatrix);
+		    smPyr[ s ]->costVol[ d ] = tempMatrix.clone();
+		}
 	}
+
+
+	cudaCheckError(cudaFree(pdSrc));
+	cudaCheckError(cudaFree(dinvWgt));
+
 #endif
 	// PrintMat<double>( smPyr[ 0 ]->costVol[ 1 ] );
 	delete [] invWgt;

@@ -84,8 +84,9 @@ void GrdCC::buildCV( const Mat& lImg, const Mat& rImg, const int maxDis, Mat* co
 
 	// build cost volume! start from 1
 	// try 0
+        #pragma omp parallel for
 	for( int d = 0; d < maxDis; d ++ ) {
-		printf( "-c-c-" );
+		//printf( "-c-c-" );
 		for( int y = 0; y < hei; y ++ ) {
 			double* lData = ( double* ) lImg.ptr<double>( y );
 			double* rData = ( double* ) rImg.ptr<double>( y );
@@ -132,6 +133,7 @@ void GrdCC::buildRightCV( const Mat& lImg, const Mat& rImg, const int maxDis, Ma
 	rGrdX += 0.5;
 	// build cost volume! start from 1
 	// try 0
+        #pragma omp parallel for
 	for( int d = 0; d < maxDis; d ++ ) {
 		printf( "-r-c-c-" );
 		for( int y = 0; y < hei; y ++ ) {

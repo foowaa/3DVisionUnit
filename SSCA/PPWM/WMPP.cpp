@@ -290,6 +290,7 @@ void WMPP::postProcess( const Mat& lImg, const Mat& rImg, const int maxDis, cons
 	int* rValid = new int[ imgSize ];
 	
 	// iter 3 times
+    #pragma omp parallel for 
     for( int i = 0; i < 3; i ++ ) {
 		// save check results
 		WMPP_FUNC::lrCheck( lDis, rDis, lValid, rValid, disSc );

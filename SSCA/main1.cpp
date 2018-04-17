@@ -11,6 +11,7 @@
 #include "CAFilter/GFCA.h"
 #include "GetMehod.h"
 #include "cvtools.h"
+#include<chrono>
 
 #define USE_MEDIAN_FILTER
 
@@ -112,7 +113,13 @@ int main( int argc, char** argv )
 		printf("\n Cost Aggregation in Scale Space\n");
 		printf("\n--------------------------------------------------------\n");
 		// new method
+		std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+
 		SolveAll(smPyr, PY_LVL, costAlpha);
+
+		std::chrono::steady_clock::time_point stop = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsedTime = std::chrono::duration_cast<chrono::duration<double>>(stop - start);
+		cout << "SolveAll: " << elapsedTime.count() * 1000.0  << " m    s." << endl;
 
 		// old method
 		//for( int p = PY_LVL - 2 ; p >= 0; p -- ) {
@@ -122,10 +129,13 @@ int main( int argc, char** argv )
 		//
 		// Match + Postprocess
 		//
+		start = std::chrono::steady_clock::now();
 		smPyr[0]->Match();
 		smPyr[0]->PostProcess(ppMtd);
 		Mat lDis = smPyr[0]->getLDis();
-
+		stop = std::chrono::steady_clock::now();
+		elapsedTime = std::chrono::duration_cast<chrono::duration<double>>(stop - start);
+		cout << "Match + Postprocess: " << elapsedTime.count() * 1000.0  << " m    s." << endl;
 #ifdef USE_MEDIAN_FILTER
 		//
 		// Median Filter Output
@@ -150,7 +160,7 @@ int main( int argc, char** argv )
 		//
 		// For drawing - save cost volume
 		//
-		string costFn = "";
+/*		string costFn = "";
 		if (costAlpha > 0.0) {
 			costFn = "S_" + caName + ".txt";
 		}
@@ -165,5 +175,6 @@ int main( int argc, char** argv )
 		delete caMtd;
 		delete ppMtd;
 		return 0;
+*/
 }
 
