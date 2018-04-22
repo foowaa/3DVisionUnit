@@ -1,25 +1,25 @@
 Determining if the pthread_create exist failed with the following output:
-Change Dir: /home/nvidia/SuperVehicle1/SSCA/build/CMakeFiles/CMakeTmp
+Change Dir: /home/nvidia/SuperVehicle1.2/SSCA/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_9c510/fast"
-/usr/bin/make -f CMakeFiles/cmTC_9c510.dir/build.make CMakeFiles/cmTC_9c510.dir/build
-make[1]: Entering directory '/home/nvidia/SuperVehicle1/SSCA/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_9c510.dir/CheckSymbolExists.c.o
-/usr/bin/cc   -fPIC    -o CMakeFiles/cmTC_9c510.dir/CheckSymbolExists.c.o   -c /home/nvidia/SuperVehicle1/SSCA/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
-Linking C executable cmTC_9c510
-/usr/bin/cmake-3.10.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9c510.dir/link.txt --verbose=1
-/usr/bin/cc -fPIC      -rdynamic CMakeFiles/cmTC_9c510.dir/CheckSymbolExists.c.o  -o cmTC_9c510 
-CMakeFiles/cmTC_9c510.dir/CheckSymbolExists.c.o: In function `main':
+Run Build Command:"/usr/bin/make" "cmTC_1b310/fast"
+/usr/bin/make -f CMakeFiles/cmTC_1b310.dir/build.make CMakeFiles/cmTC_1b310.dir/build
+make[1]: Entering directory '/home/nvidia/SuperVehicle1.2/SSCA/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1b310.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -fPIC    -o CMakeFiles/cmTC_1b310.dir/CheckSymbolExists.c.o   -c /home/nvidia/SuperVehicle1.2/SSCA/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_1b310
+/usr/bin/cmake-3.10.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1b310.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC      -rdynamic CMakeFiles/cmTC_1b310.dir/CheckSymbolExists.c.o  -o cmTC_1b310 
+CMakeFiles/cmTC_1b310.dir/CheckSymbolExists.c.o: In function `main':
 CheckSymbolExists.c:(.text+0x14): undefined reference to `pthread_create'
 CheckSymbolExists.c:(.text+0x18): undefined reference to `pthread_create'
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_9c510.dir/build.make:97: recipe for target 'cmTC_9c510' failed
-make[1]: *** [cmTC_9c510] Error 1
-make[1]: Leaving directory '/home/nvidia/SuperVehicle1/SSCA/build/CMakeFiles/CMakeTmp'
-Makefile:126: recipe for target 'cmTC_9c510/fast' failed
-make: *** [cmTC_9c510/fast] Error 2
+CMakeFiles/cmTC_1b310.dir/build.make:97: recipe for target 'cmTC_1b310' failed
+make[1]: *** [cmTC_1b310] Error 1
+make[1]: Leaving directory '/home/nvidia/SuperVehicle1.2/SSCA/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_1b310/fast' failed
+make: *** [cmTC_1b310/fast] Error 2
 
-File /home/nvidia/SuperVehicle1/SSCA/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+File /home/nvidia/SuperVehicle1.2/SSCA/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
 /* */
 #include <pthread.h>
 
@@ -35,22 +35,22 @@ int main(int argc, char** argv)
 }
 
 Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/nvidia/SuperVehicle1/SSCA/build/CMakeFiles/CMakeTmp
+Change Dir: /home/nvidia/SuperVehicle1.2/SSCA/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_9c2db/fast"
-/usr/bin/make -f CMakeFiles/cmTC_9c2db.dir/build.make CMakeFiles/cmTC_9c2db.dir/build
-make[1]: Entering directory '/home/nvidia/SuperVehicle1/SSCA/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_9c2db.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_9c2db.dir/CheckFunctionExists.c.o   -c /usr/bin/cmake-3.10.3/share/cmake-3.10/Modules/CheckFunctionExists.c
-Linking C executable cmTC_9c2db
-/usr/bin/cmake-3.10.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9c2db.dir/link.txt --verbose=1
-/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create     -rdynamic CMakeFiles/cmTC_9c2db.dir/CheckFunctionExists.c.o  -o cmTC_9c2db -lpthreads 
+Run Build Command:"/usr/bin/make" "cmTC_281b9/fast"
+/usr/bin/make -f CMakeFiles/cmTC_281b9.dir/build.make CMakeFiles/cmTC_281b9.dir/build
+make[1]: Entering directory '/home/nvidia/SuperVehicle1.2/SSCA/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_281b9.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_281b9.dir/CheckFunctionExists.c.o   -c /usr/bin/cmake-3.10.3/share/cmake-3.10/Modules/CheckFunctionExists.c
+Linking C executable cmTC_281b9
+/usr/bin/cmake-3.10.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_281b9.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create     -rdynamic CMakeFiles/cmTC_281b9.dir/CheckFunctionExists.c.o  -o cmTC_281b9 -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_9c2db.dir/build.make:97: recipe for target 'cmTC_9c2db' failed
-make[1]: *** [cmTC_9c2db] Error 1
-make[1]: Leaving directory '/home/nvidia/SuperVehicle1/SSCA/build/CMakeFiles/CMakeTmp'
-Makefile:126: recipe for target 'cmTC_9c2db/fast' failed
-make: *** [cmTC_9c2db/fast] Error 2
+CMakeFiles/cmTC_281b9.dir/build.make:97: recipe for target 'cmTC_281b9' failed
+make[1]: *** [cmTC_281b9] Error 1
+make[1]: Leaving directory '/home/nvidia/SuperVehicle1.2/SSCA/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_281b9/fast' failed
+make: *** [cmTC_281b9/fast] Error 2
 
 

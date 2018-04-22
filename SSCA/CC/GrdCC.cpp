@@ -40,6 +40,7 @@ void myComputeGradient( const Mat& grayImg, Mat& grd )
 	int m_w = grayImg.cols;
 	grd = Mat::zeros( m_h, m_w, CV_64FC1 );
 	float gray,gray_minus,gray_plus;
+
 	for( int y= 0; y < m_h; y++ )
 	{
 		float* grayData = ( float* ) grayImg.ptr<float>( y );

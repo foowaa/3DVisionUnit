@@ -1,4 +1,4 @@
-# Install script for directory: /home/nvidia/SuperVehicle1/SSCA
+# Install script for directory: /home/nvidia/SuperVehicle1.2/SSCA
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/nvidia/SuperVehicle1/SSCA/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/nvidia/SuperVehicle1.2/SSCA/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

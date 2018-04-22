@@ -7,11 +7,11 @@ C_FLAGS =  -fopenmp
 
 C_DEFINES = 
 
-C_INCLUDES = -I/home/nvidia/SuperVehicle1/SSCA/./inc -I/home/nvidia/SuperVehicle1/SSCA/CAFilter -I/home/nvidia/SuperVehicle1/SSCA/CANLC -I/home/nvidia/SuperVehicle1/SSCA/CAST -I/home/nvidia/SuperVehicle1/SSCA/CC -I/home/nvidia/SuperVehicle1/SSCA/PPSG -I/home/nvidia/SuperVehicle1/SSCA/PPWM -I/usr/include/opencv -I/usr/local/cuda-8.0/include 
+C_INCLUDES = -I/home/nvidia/SuperVehicle1.2/SSCA/./inc -I/home/nvidia/SuperVehicle1.2/SSCA/CAFilter -I/home/nvidia/SuperVehicle1.2/SSCA/CANLC -I/home/nvidia/SuperVehicle1.2/SSCA/CAST -I/home/nvidia/SuperVehicle1.2/SSCA/CC -I/home/nvidia/SuperVehicle1.2/SSCA/PPSG -I/home/nvidia/SuperVehicle1.2/SSCA/PPWM -I/home/nvidia/SuperVehicle1.2/SSCA/inc -I/usr/include/opencv -I/usr/local/cuda-8.0/include 
 
 CXX_FLAGS =  -fopenmp   -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/nvidia/SuperVehicle1/SSCA/./inc -I/home/nvidia/SuperVehicle1/SSCA/CAFilter -I/home/nvidia/SuperVehicle1/SSCA/CANLC -I/home/nvidia/SuperVehicle1/SSCA/CAST -I/home/nvidia/SuperVehicle1/SSCA/CC -I/home/nvidia/SuperVehicle1/SSCA/PPSG -I/home/nvidia/SuperVehicle1/SSCA/PPWM -I/usr/include/opencv -I/usr/local/cuda-8.0/include 
+CXX_INCLUDES = -I/home/nvidia/SuperVehicle1.2/SSCA/./inc -I/home/nvidia/SuperVehicle1.2/SSCA/CAFilter -I/home/nvidia/SuperVehicle1.2/SSCA/CANLC -I/home/nvidia/SuperVehicle1.2/SSCA/CAST -I/home/nvidia/SuperVehicle1.2/SSCA/CC -I/home/nvidia/SuperVehicle1.2/SSCA/PPSG -I/home/nvidia/SuperVehicle1.2/SSCA/PPWM -I/home/nvidia/SuperVehicle1.2/SSCA/inc -I/usr/include/opencv -I/usr/local/cuda-8.0/include 
 

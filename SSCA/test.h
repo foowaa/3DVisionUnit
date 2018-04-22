@@ -4,5 +4,6 @@
 #include "headers.h"
 
 //#define PY_LVL 5
-__global__ void solveAllKernel(PtrStepSz<double>* pdSrc, double* sWgt, int cA1, int cA2, int cA3, int lvl);
+void caller_test(SSCA**& smPyr, double* invWgt, int lvl);
+void caller_rtest(SSCA**& smPyr, double* invWgt, int lvl);
 #endif
