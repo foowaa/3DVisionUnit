@@ -430,8 +430,10 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 	//
         #pragma omp parallel for 
 	for( int d = 1; d < smPyr[ 0 ]->maxDis; d ++ ) {
+#pragma omp parallel for 
 		// printf( ".s.v." );
 		for( int y = 0; y < hei; y ++ ) {
+#pragma omp parallel for 
 			for( int x = 0; x < wid; x ++ ) {
 				int curY = y;
 				int curX = x;
@@ -474,7 +476,9 @@ end
        #pragma omp parallel for 
 	for( int d = 1; d < smPyr[ 0 ]->maxDis; d ++ ) {
 		// printf( ".s.v." );
+#pragma omp parallel for 
 		for( int y = 0; y < hei; y ++ ) {
+#pragma omp parallel for 
 			for( int x = 0; x < wid; x ++ ) {
 				int curY = y;
 				int curX = x;
