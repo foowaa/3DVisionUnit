@@ -1,0 +1,13 @@
+Data/left1.jpg
+Data/left2.jpg
+Data/left3.jpg
+Data/left4.jpg
+Data/left5.jpg
+Data/left6.jpg
+Data/left7.jpg
+Data/left8.jpg
+Data/left9.jpg
+Data/left10.jpg
+Data/left11.jpg
+Data/left12.jpg
+Data/left13.jpg

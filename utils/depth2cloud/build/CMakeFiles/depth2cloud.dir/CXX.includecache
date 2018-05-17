@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/nvidia/SuperVehicle/utils/depth2cloud/depth2cloud.cpp
+depth2cloud.h
+/home/nvidia/SuperVehicle/utils/depth2cloud/depth2cloud.h
+
+/home/nvidia/SuperVehicle/utils/depth2cloud/depth2cloud.h
+iostream
+-
+stdio.h
+-
+opencv2/core/core.hpp
+-
+opencv2/highgui/highgui.hpp
+-
+

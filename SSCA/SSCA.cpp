@@ -1,5 +1,8 @@
 #include "CommFunc.h"
 #include "SSCA.h"
+using namespace cv;
+using namespace cv::gpu;
+#include "test.h"
 #include<stdio.h>
 SSCA::SSCA(const Mat l, const Mat r, const int m, const int d)
 	: lImg( l ), rImg( r ), maxDis( m ), disSc( d )
@@ -128,7 +131,7 @@ void SSCA::AddPyrCostVol(SSCA *pre, const double COST_ALPHA )
 //
 void SSCA::CostCompute( CCMethod* ccMtd )
 {
-	printf( "\n\tCost Computation:" );
+	//printf( "\n\tCost Computation:" );
 	if( ccMtd ) {
 		ccMtd->buildCV( lImg, rImg, maxDis, costVol );
 #ifdef COMPUTE_RIGHT
@@ -144,7 +147,7 @@ void SSCA::CostCompute( CCMethod* ccMtd )
 //
 void SSCA::CostAggre( CAMethod* caMtd )
 {
-	printf( "\n\tCost Aggregation:" );
+	//printf( "\n\tCost Aggregation:" );
 	if( caMtd ) {
 		caMtd->aggreCV( lImg, rImg, maxDis, costVol );
 #ifdef COMPUTE_RIGHT
@@ -161,6 +164,7 @@ void SSCA::CostAggre( CAMethod* caMtd )
 void SSCA::Match( void )
 {
 	printf( "\n\tMatch" );
+        #pragma omp parallel for
 	for( int y = 0; y < hei; y ++ ) {
 		uchar* lDisData = ( uchar* ) lDis.ptr<uchar>( y );
 		for( int x = 0; x < wid; x ++ ) {
@@ -177,6 +181,7 @@ void SSCA::Match( void )
 		}
 	}
 #ifdef COMPUTE_RIGHT
+        #pragma omp parallel for
 	for( int y = 0; y < hei; y ++ ) {
 		uchar* rDisData = ( uchar* ) rDis.ptr<uchar>( y );
 		for( int x = 0; x < wid; x ++ ) {
@@ -244,16 +249,18 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 	int wid = smPyr[ 0 ]->wid;
 
 	// backup all cost
-	Mat** newCosts = new Mat*[ PY_LVL ];
+/*	Mat** newCosts = new Mat*[ PY_LVL ];
 	for( int s = 0; s < PY_LVL; s ++ ) {
 		newCosts[ s ] = new Mat[ smPyr[ s ]->maxDis ];
 		for( int d = 0; d < smPyr[ s ]->maxDis; d ++ ) {
 			newCosts[ s ][ d ] = Mat::zeros( smPyr[ s ]->hei, smPyr[ s ]->wid, CV_64FC1  );
 		}
-	}
+	}*/
 
-	for( int d = 1; d < smPyr[ 0 ]->maxDis; d ++ ) {
-		printf( ".s.v." );
+	//CPU version
+        
+/*	for( int d = 1; d < smPyr[ 0 ]->maxDis; d ++ ) {
+		//printf( ".s.v." );
 		for( int y = 0; y < hei; y ++ ) {
 			for( int x = 0; x < wid; x ++ ) {
 				for( int m = 0; m < PY_LVL; m ++ ) {
@@ -281,19 +288,62 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 				}
 			}
 		}
-	}
+	}*/
 
+
+	/*
+	CUDA实现
+	author: cltian
+	date: 2018/4/10
+        */
+	GpuMat* mats;
+	const int constVar1 = PY_LVL*smPyr[ 0 ]->maxDis;
+	const int constVar2 = smPyr[ 0 ]->maxDis;
+	PtrStepSz<double>* phSrc = new PtrStepSz<double>[constVar1];
+	PtrStepSz<double>* phDst = new PtrStepSz<double>[constVar1];
+	PtrStepSz<double>* pdSrc;
+	PtrStepSz<double>* pdDst;
+	double *dinvWgt  = new double[ PY_LVL * PY_LVL];
+	int i = 0;
+	for(int s=0; s<PY_LVL; s++)
+		for(int d=0; d<constVar2; d++)
+			mats[i++].upload(smPyr[s]->constVol[d]);
+	for (int i=0; i<constVar1; i++)
+		phSrc[i] = mats[i];
+    cudaCheckError(cudaMalloc(&dinvWgt, sizeof(double)*PY_LVL*PY_LVL));
+	cudaCheckError(cudaMalloc(&pdSrc, constVar1*sizeof(PtrStepSz<double>)));
+	cudaCheckError(cudaMalloc(&pdDst, constVar1*sizeof(PtrStepSz<double>)));
+
+	cudaCheckError(cudaMemcpy(pdSrc, phSrc, constVar1*sizeof(PtrStepSz<double>), 
+		                      cudaMemcpyHostToDevice));
+
+    dim3 block(8, 8, 8);
+    dim3 grid( (constVar2+block.x-1)/block.x, (hei+block.y-1)/block.y, (wid+block.z-1)/block.z);
+
+	solveAllKernel<<<grid, block>>>(pdSrc, pdDst, dinvWgt, constVar2, hei, wid, PY_LVL);
+
+	cudaCheckError(cudaMemcpy(phDst, pdDst, constVar1*sizeof(PtrStepSz<double>)
+		                      cudaMemcpyDeviceToHost));
 	for( int s = 0; s < PY_LVL; s ++ ) {
 		for( int d = 0; d < smPyr[ s ]->maxDis; d ++ ) {
-			smPyr[ s ]->costVol[ d ] = newCosts[ s ][ d ].clone();
-		}
+			//smPyr[ s ]->costVol[ d ] = pDistData[ s*PY_LVL+d ]
+			Mat tempMatrix;
+			phDst[s*PY_LVL+d].download(tempMatrix);
+		    smPyr[ s ]->costVol[ d ] = tempMatrix.clone();
 	}
+
+	cudaCheckError(cudaFree(pdSrc));
+	cudaCheckError(cudaFree(pdDst));
+	cudaCheckError(cudaFree(dinvWgt));
+/*
+end
+ */
 	// PrintMat<double>( smPyr[ 0 ]->costVol[ 1 ] );
 	delete [] invWgt;
-	for( int s = 0; s < PY_LVL; s ++ ) {
+/*	for( int s = 0; s < PY_LVL; s ++ ) {
 		delete [ ] newCosts[ s ];
 	}
-	delete [] newCosts;
+	delete [] newCosts;*/
 }
 
 void saveOnePixCost( SSCA**& smPyr, const int PY_LVL )
@@ -329,8 +379,8 @@ void saveOnePixCost( SSCA**& smPyr, const int PY_LVL )
 // global function to solve all cost volume
 void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 {
-	printf( "\n\t\tSolve All" );
-	printf( "\n\t\tReg param: %.4lf\n", REG_LAMBDA );
+	printf( "\n\t\tSolve All " );
+	//printf( "\n\t\tReg param: %.4lf\n", REG_LAMBDA );
 	// construct regularization matrix
 	Mat regMat = Mat::zeros( PY_LVL, PY_LVL, CV_64FC1 );
 	for( int s = 0; s < PY_LVL; s ++ ) {
@@ -351,7 +401,7 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 	for( int s = 0; s < PY_LVL; s ++ ) {
 		invWgt[ s ] = regInv.at<double>( 0, s );
 	}
-	PrintMat<double>( regInv );
+	//PrintMat<double>( regInv );
 	int hei = smPyr[ 0 ]->hei;
 	int wid = smPyr[ 0 ]->wid;
 	// PrintMat<double>( smPyr[ 0 ]->costVol[ 1 ] );
@@ -378,9 +428,12 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 	//
 	// Left Cost Volume
 	//
+        #pragma omp parallel for 
 	for( int d = 1; d < smPyr[ 0 ]->maxDis; d ++ ) {
+#pragma omp parallel for 
 		// printf( ".s.v." );
 		for( int y = 0; y < hei; y ++ ) {
+#pragma omp parallel for 
 			for( int x = 0; x < wid; x ++ ) {
 				int curY = y;
 				int curX = x;
@@ -404,13 +457,28 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 		}
 	}
 
+
+	/*
+	CUDA实现
+	author: cltian
+	date: 2018/4/10
+        */
+	//caller_test(smPyr, invWgt, PY_LVL);
+
+
+/*
+end
+ */
 #ifdef COMPUTE_RIGHT
 	//
 	// Right Cost Volume
 	//
+       #pragma omp parallel for 
 	for( int d = 1; d < smPyr[ 0 ]->maxDis; d ++ ) {
 		// printf( ".s.v." );
+#pragma omp parallel for 
 		for( int y = 0; y < hei; y ++ ) {
+#pragma omp parallel for 
 			for( int x = 0; x < wid; x ++ ) {
 				int curY = y;
 				int curX = x;
@@ -433,6 +501,8 @@ void SolveAll( SSCA**& smPyr, const int PY_LVL, const double REG_LAMBDA )
 			}
 		}
 	}
+//void caller_rtest(smPyr, invWgt, PY_LVL);
+
 #endif
 	// PrintMat<double>( smPyr[ 0 ]->costVol[ 1 ] );
 	delete [] invWgt;
