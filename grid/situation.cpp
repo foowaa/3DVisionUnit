@@ -191,6 +191,7 @@ IplImage * grids(IplImage *range,IplImage *scanAngle,IplImage *pose,double *orig
 	int j=0;
 	for (int i = 0;i<gridCord->height;i++)
 	{
+		//double x_occ = 0;
 		double x_occ = CV_IMAGE_ELEM(range,double,i,WQ)*cos(CV_IMAGE_ELEM(scanAngle,double,i,0)+pose2)+pose0;
 		//double y_occ = -CV_IMAGE_ELEM(range,double,i,WQ)*sin(CV_IMAGE_ELEM(pose,double,WQ,2))+CV_IMAGE_ELEM(pose,double,WQ,1);
 		//double  df1 = ceil(x_occ*resolution)+origin[j];
@@ -206,6 +207,7 @@ IplImage * grids(IplImage *range,IplImage *scanAngle,IplImage *pose,double *orig
 	for (int i = 0;i<gridCord->height;i++)
 	{
 		//double x_occ = CV_IMAGE_ELEM(range,double,i,WQ)*cos(CV_IMAGE_ELEM(pose,double,WQ,2))+CV_IMAGE_ELEM(pose,double,WQ,0);
+		//double y_occ = 0;
 		double y_occ = -CV_IMAGE_ELEM(range,double,i,WQ)*sin(CV_IMAGE_ELEM(scanAngle,double,i,0)+pose2)+pose1;
 
 		//double  df1 = ceil(x_occ*resolution)+origin[j];
@@ -219,8 +221,8 @@ IplImage * grids(IplImage *range,IplImage *scanAngle,IplImage *pose,double *orig
 	return gridCord;
 }
 
-
-void occGridMapping(IplImage *ranges,IplImage * scanAngles, IplImage *pose,IplImage * height, Param param)
+void occGridMapping(IplImage *ranges, IplImage * scanAngles, IplImage *pose, Param param)
+//void occGridMapping(IplImage *ranges,IplImage * scanAngles, IplImage *pose,IplImage * height, Param param)
 {
 	int myResol = param.resol;
 	IplImage * myMap = cvCreateImage(cvSize(param.size[1],param.size[0]),IPL_DEPTH_64F,1);
@@ -230,7 +232,7 @@ void occGridMapping(IplImage *ranges,IplImage * scanAngles, IplImage *pose,IplIm
 
 	IplImage * CXRGB = cvCreateImage(cvSize(param.size[1],param.size[0]),8,3);
 
-	IplImage * CX1 = cvCreateImage(cvSize(param.size[1]*8,param.size[0]*8),8,3);
+	IplImage * CX1 = cvCreateImage(cvSize(param.size[1]*16,param.size[0]*16),8,3);
 
 	int myOrigin[2];
 	myOrigin[0]= param.origin[0];
@@ -292,14 +294,21 @@ void occGridMapping(IplImage *ranges,IplImage * scanAngles, IplImage *pose,IplIm
 
 			int occCells1=CV_IMAGE_ELEM(occCells,double,i,0);
 			int occCells2=CV_IMAGE_ELEM(occCells,double,i,1);
-			bresenham1(x,y,gridPose[0],gridPose[1],occCells1,occCells2);
 
-			CV_IMAGE_ELEM(myMap,double,occCells2-1,occCells1-1)=CV_IMAGE_ELEM(myMap,double,occCells2-1,occCells1-1) + (int)lo_occ;
-
-			for(int ii=0;ii<x.size();ii++)
+			if (occCells1 >= 1 && occCells2 >= 1)
 			{
-				CV_IMAGE_ELEM(myMap,double,y[ii]-1,x[ii]-1)=CV_IMAGE_ELEM(myMap,double,y[ii]-1,x[ii]-1)- lo_free;
+				bresenham1(x, y, gridPose[0], gridPose[1], occCells1, occCells2);
+
+				if (occCells1 >= 1 && occCells2 >= 1)
+					CV_IMAGE_ELEM(myMap, double, occCells2 - 1, occCells1 - 1) = CV_IMAGE_ELEM(myMap, double, occCells2 - 1, occCells1 - 1) + (int)lo_occ;
+
+				for (int ii = 0; ii<x.size(); ii++)
+				{
+					if (y[ii] >= 1 && x[ii] >= 1)
+						CV_IMAGE_ELEM(myMap, double, y[ii] - 1, x[ii] - 1) = CV_IMAGE_ELEM(myMap, double, y[ii] - 1, x[ii] - 1) - lo_free;
+				}
 			}
+
 		}
 
 		//{
@@ -348,36 +357,52 @@ void occGridMapping(IplImage *ranges,IplImage * scanAngles, IplImage *pose,IplIm
 		{
 			for(int j=0;j<myMap->width;j++)
 			{
-				CV_IMAGE_ELEM(CX,byte,i,j)=255-(myMapmax-CV_IMAGE_ELEM(myMap,double,i,j)+myMapmin);
+				CV_IMAGE_ELEM(CX,byte,i,j)=(myMapmax-CV_IMAGE_ELEM(myMap,double,i,j)+myMapmin);
 				//255-(byte)((myMapmax-myMapmin)/255*(CV_IMAGE_ELEM(myMap,double,i,j)-myMapmin));
 			}
 		}
 
-		cvCvtColor( CX,CXRGB, CV_GRAY2RGB);
+		cvCvtColor(CX,CXRGB, CV_GRAY2RGB);
 
 		//IplImage* pBinary=cvLoadImage("c://temp.jpg",0);  
 		//Mat Img;  
 		//Img=cvarrToMat(CXRGB); 
 
+
 		for(int i=0;i<gridPosex.size()-1;i++)
 		{
 			CvPoint start;
 			start.x=gridPosex[i];
-			start.y=gridPosey[i];
+			start.y=gridPosey[i]+10;
 
 			CvPoint end;
 			end.x=gridPosex[i+1];
-			end.y=gridPosey[i+1];
+			end.y=gridPosey[i+1]+10;
 
-			cvLine(CXRGB,start,end,CV_RGB(255,0,0),1,8,0);
+			cvLine(CXRGB,start,end,CV_RGB(255,0,0),0.2,8,0);
 			//cv::line(Img, start, end, cv::Scalar(0, 255, 255));  
 		}
+
+
 		//IplImage* pBinary = &IplImage(Img);  
 		cvResize(CXRGB,CX1);
-		//		cvShowImage("1",imgDouble);
-		cvShowImage("3",CX1);
+		//for (int i = 0; i<gridPosex.size() - 1; i++)
+		//{
+		//	CvPoint start;
+		//	start.x = gridPosex[i]*16;
+		//	start.y = (gridPosey[i] )*16-3;
 
-		cvWaitKey(30);
+		//	CvPoint end;
+		//	end.x = gridPosex[i + 1]*16;
+		//	end.y = (gridPosey[i + 1] )*16-3;
+
+		//	cvLine(CX1, start, end, CV_RGB(255, 0, 0), 4, 8, 0);
+		//	//cv::line(Img, start, end, cv::Scalar(0, 255, 255));  
+		//}
+		//		cvShowImage("1",imgDouble);
+		cvShowImage("3", CX1);
+
+		cvWaitKey(300);
 
 
 		//while(1)

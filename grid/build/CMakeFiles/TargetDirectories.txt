@@ -1,3 +1,0 @@
-/home/nvidia/SuperVehicle-dev1/grid/build/CMakeFiles/rebuild_cache.dir
-/home/nvidia/SuperVehicle-dev1/grid/build/CMakeFiles/edit_cache.dir
-/home/nvidia/SuperVehicle-dev1/grid/build/CMakeFiles/grid_map.dir

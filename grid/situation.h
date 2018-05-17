@@ -4,7 +4,7 @@
 #include<opencv/cv.h>               
 #include<opencv/cvaux.h>
 #include<opencv/highgui.h>
-#include<opencv/cxcore.h>  
+#include<opencv/cxcore.h> 
 
 
 using namespace std;
@@ -26,4 +26,5 @@ struct Param
 int mod(double x,double y);
 void bresenham1(vector<int> &x,vector<int> &y,double x1,double y1, double x2,double y2);
 IplImage * grids(IplImage *range,IplImage *scanAngle,IplImage *pose,double *origin,double resolution,int WQ);
-void occGridMapping(IplImage *ranges,IplImage * scanAngles, IplImage *pose,IplImage * height, Param param);
+void occGridMapping(IplImage *ranges,IplImage * scanAngles, IplImage *pose, Param param);
+//void occGridMapping(IplImage *ranges, IplImage * scanAngles, IplImage *pose, IplImage * height, Param param);
