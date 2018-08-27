@@ -1,5 +1,5 @@
 # SuperVehicle
-This is a private project on Nvidia Jetson TX2.
+This project works on the Nvidia Jetson TX2 for 3D reconstruction of binocular vision.
 
 项目构成：
 
