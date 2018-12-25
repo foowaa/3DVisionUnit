@@ -1,4 +1,4 @@
-# SuperVehicle
+# 3DVisionUnit
 This project works on the **Nvidia Jetson TX2** for `3D reconstruction of binocular vision`.
 
 项目构成：
@@ -18,8 +18,6 @@ SSCA[1] is proposed in `CVPR 2014` which is fast and realiable. I accelerate it 
 ```
 References:
 [1] Zhang, Kang, et al. "Cross-scale cost aggregation for stereo matching." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2014.
-CUDA API:
-[http://docs.nvidia.com/cuda/cuda-runtime-api/index.html](http://docs.nvidia.com/cuda/cuda-runtime-api/index.html)
-TX2 Resources:
-[devtalk.nvidia.com/default/topic/998129/jetson-tx2/links-to-jetson-tx2-resources/](devtalk.nvidia.com/default/topic/998129/jetson-tx2/links-to-jetson-tx2-resources/)
+[2] CUDA API: [http://docs.nvidia.com/cuda/cuda-runtime-api/index.html](http://docs.nvidia.com/cuda/cuda-runtime-api/index.html)
+[3] TX2 Resources: [devtalk.nvidia.com/default/topic/998129/jetson-tx2/links-to-jetson-tx2-resources/](devtalk.nvidia.com/default/topic/998129/jetson-tx2/links-to-jetson-tx2-resources/)
 ```
